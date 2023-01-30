@@ -1,0 +1,53 @@
+import React, { useState } from 'react';
+
+function withState(WrappedComponent) {
+  return function StatefulComponent(props) {
+    const [count, setCount] = useState(0);
+
+    function handleCountChange(value) {
+      setCount(count + value);
+    }
+
+    return (
+      <WrappedComponent
+        count={count}
+        onCountChange={handleCountChange}
+        {...props}
+      />
+    );
+  };
+}
+
+function Child1({ count, onCountChange }) {
+  return (
+    <div>
+      <p>Child 1: {count}</p>
+      <button onClick={() => onCountChange(1)}>
+        Increase count
+      </button>
+    </div>
+  );
+}
+
+function Child2({ count, onCountChange }) {
+  return (
+    <div>
+      <p>Child 2: {count}</p>
+      <button onClick={() => onCountChange(-1)}>
+        Decrease count
+      </button>
+    </div>
+  );
+}
+
+const StatefulChild1 = withState(Child1);
+const StatefulChild2 = withState(Child2);
+
+function ParentComponent() {
+  return (
+    <div>
+      <StatefulChild1 />
+      <StatefulChild2 />
+    </div>
+  );
+}
